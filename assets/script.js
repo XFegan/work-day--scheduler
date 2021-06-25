@@ -1,26 +1,49 @@
-var tast = {};
-var container = $(".container");
-var textAreaEL = document.querySelector("textarea");
-
-var rightNow = moment().format("MMMM Do YYYY, h:mm:ss a");
+var rightNow = moment().format("dddd, MMMM Do YYYY");
 $("#currentDay").append(rightNow);
 
-var hours = ["9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM"];
-var miltaryhours = [9, 10, 11, 12, 13, 14, 15, 16, 17];
 
-for (let index = 0; index < hours.length; index++) {
-  // compare moment.hour() with miltary hour using if and else if and else
-  container.append(` 
-  <div class="row">
-    <div class="col-sm-1 hour time-block">${hours[index]}</div>
-     <div class="col-sm-9"><textarea  class="form-control h-100 w-100 p-0 past present future"></textarea></div>
-    <div class="col-sm-2"> <button class="saveBtn h-100  "><i class="far fa-save"></i></button></div>
-   </div>`);
+$(document).ready(function (){
+    $(".saveBtn").on("click", function(){
+    var text = $(this).siblings(".description").val();
+    var time = $(this).parent().attr("id");
+    localStorage.setItem(time,text);
+})
+
+
+function timeTracker (){
+    var timeNow = moment().hour();
+$(".time-block").each(function (){
+    var blockTime = parseInt($(this).attr("id").split("hour") [1]);
+
+    if (blockTime < timeNow) {
+        $(this).addClass("past");
+        $(this).removeClass("future");
+        $(this).removeClass("present");   
+    }
+
+    else if (blockTime === timeNow) {
+        $(this).addClass("present");
+        $(this).removeClass("past");
+        $(this).removeClass("future");
+    }
+
+    else {
+        $(this).addClass("future");
+        $(this).removeClass("present");
+        $(this).removeClass("past");
+    }
+})
 }
 
-$(".saveBtn").click(function () {
-  var textAreaEL = $("textarea").val();
-  var newTask = [];
-  newTask.push(textAreaEL);
-  localStorage.setItem("taskinfo", JSON.stringify(newTask));
-});
+$("#hour9 .description").val(localStorage.getItem("#hour9"))
+$("#hour10 .description").val(localStorage.getItem("#hour10"))
+$("#hour11 .description").val(localStorage.getItem("#hour11"))
+$("#hour12 .description").val(localStorage.getItem("#hour12"))
+$("#hour13 .description").val(localStorage.getItem("#hour13"))
+$("#hour14 .description").val(localStorage.getItem("#hour14"))
+$("#hour15 .description").val(localStorage.getItem("#hour15"))
+$("#hour16 .description").val(localStorage.getItem("#hour16"))
+$("#hour17 .description").val(localStorage.getItem("#hour17"))
+
+timeTracker();
+})
